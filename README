@@ -1,0 +1,17 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=4886
+
+Consult A Dictionary is plugin that provides easy (IMHO) way to consult
+dictionaries (for example for translate words). It provides the following
+funcionality:
+    * Search for words or phrases in dictionaries and displaying
+      dictionary entries in a separate window
+    * Use of Ex commands and hence shell-commands (for example 
+      "r!/usr/bin/sdcv -n $$$_words) for displaying dictionary entries.
+    * Search in dictionaries for:
+        - given word or phrase (:ConsultADict <words>);
+        - the word under the cursor (:ConsultADict or :ConsultADictToggle);
+        - the current selection in visual mode (:ConsultADict or :ConsultADictToggle)
+    * Search history (for current script run time)
+
+For more information see :help ConsultADict
+

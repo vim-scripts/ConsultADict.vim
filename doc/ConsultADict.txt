@@ -1,0 +1,163 @@
+*ConsultADict.txt*                          Plugin for consulting dictionaries
+
+                      CONSULT A DICTIONARY     *ConsultADict*
+                            Version 0.801
+
+1. Intro                                       |ConsultADictIntro|
+2. Installation                                |ConsultADictInstallation|
+3. Usage                                       |ConsultADictUsage|
+    3.1 Quick start                            |ConsultADictQuickStart|
+    3.2 Global commands                        |ConsultADictGlobalCommands|
+    3.3 Dictionary Entry                       |ConsultADictDictuonaryEntry| 
+    3.4 Search History                         |ConsultADictSearchHistory| 
+4. Customization                               |ConsultADictCustomization|
+5. User's dictionary scripts                   |ConsultADictScripts|
+6. Credits                                     |ConsultADictCredits|
+
+==============================================================================
+1. Intro                                       *ConsultADictIntro*
+
+Consult A Dictionary is plugin that provides easy (IMHO) way to consult
+dictionaries (for example for translate words). It provides the following
+funcionality:
+    * Search for words or phrases in dictionaries and displaying
+      dictionary entries in a separate window
+    * Use of Ex commands and hence shell-commands (for example
+      "r!/usr/bin/sdcv -n $$$_words) for displaying dictionary entries. For
+      more information see |ConsultADict_cmd| and |ConsultADictScripts|
+    * Search in dictionaries for:
+        - given word or phrase (|:ConsultADict| <words>);
+        - the word under the cursor;
+        - the current selection in visual mode 
+    * Search history (for current script run time)
+
+==============================================================================
+2. Installation                                *ConsultADictInstallation*
+
+Extract the zip archive into your runtime dicrectory (for example ~/.vim or
+~/vimfiles for Windows). The archive contains the following two files:
+    plugin/ConsultADict.vim,
+    doc/ConsultADict.txt.
+
+Next, to finish installing the help file run: >
+    :helptags <your_runtime_directory>/doc
+<
+==============================================================================
+3. Usage                                       *ConsultADictUsage*
+
+------------------------------------------------------------------------------
+3.1 Quick start                                *ConsultADictQuickStart*
+
+It needs to add at least one command to list of the commands for displaying
+dictionary entries before start using plugin.  Variable |ConsultADict_cmd| is
+used to define that list (you can set it in your vimrc file).
+
+Ex commands and hence shell-commands (r!<shell_command>) are used for
+displaying dictionary entries.
+As an example, let's use sdcv (simple, cross-platform text-base utility for
+work with dictionaries) to define command for displaying dictionary entries:
+>
+    :let ConsultADict_cmd = ["r!/usr/bin/sdcv -n $$$_words"]
+<
+$$$_words will be replaced with word or phrase to look it up in dictionaries.
+
+For more information see |ConsultADict_cmd| and |ConsultADictScripts|
+
+When |ConsultADict_cmd| will be set you can use following commands and
+mappings:
+    |:ConsultADict| <words> to view dictionary entries for getting word or
+    phrase;
+
+    |:ConsultADict| to view dictionary entries for the word under the
+    cursor or for the current selection in visual mode;
+
+    |:ConsultADictHistory| to view search history;
+
+    <F1> in plugin window for Quick Help;
+
+    |:ConsultADictClose| to close plugin window.
+
+------------------------------------------------------------------------------
+3.2 Global commands                        *ConsultADictGlobalCommands*
+
+:ConsultADict [<words>]                    *:ConsultADict*
+    Opens new or moves to existent plugin window and displays dictionary
+    entries for word or phrase. There are 2 cases:
+        - if word or phrase is given, will be displayed dictionary entries for
+          this word or phrase;
+        - if argument isn't given, will be displayed dictionary entries for
+          the word under the cursor or for the current selection in visual
+          mode.
+
+:ConsultADictToggle                        *:ConsultADictToggle*
+    Toggles (open/close) plugin window. Dictionary entries for the word under
+    the cursor or for the current selection in visual mode will be displayed
+    when it opens plugin window.
+
+:ConsultADictHistory                       *:ConsultADictHistory*
+    Opens new or moves to existent plugin window and displays search history.
+
+:ConsultADictClose                         *:ConsultADictClose*
+    Closes plugin window.
+
+------------------------------------------------------------------------------
+3.3 Dictionary Entry                       *ConsultADictDictuonaryEntry* 
+
+When dictionary entries are displayed you can use following mappings in plugin
+window:
+    <F1> to open/close Quick Help;
+    f to view dictionary entries for the word under the cursor or the
+        current selection in visual mode;
+    s to switch to search history;
+    q to close plugin window.
+
+------------------------------------------------------------------------------
+3.4 Search History                         *ConsultADictSearchHistory* 
+
+When search history is displayed you can use following mappings in plugin
+window:
+    <F1> to open/close Quick Help;
+    <enter> or f or <double-click> to view dictionary entries for selected
+        search history item;
+    q to close plugin window.
+
+Search history is available for current script run time.
+
+==============================================================================
+4. Customization                               *ConsultADictCustomization*
+
+*loaded_CousultADict* turns off the script when it exists.
+
+*ConsultADict_cmd* defines list of Ex commands for displaying dictionary
+entries (you can set it in your vimrc file).
+
+    Example: >
+    :let ConsultADict_cmd=["r!/usr/bin/sdcv -n $$$_words",
+        \ "source ~/.vim/plugin/mydict.vim"]
+<
+There are two commands in example above. $$$_words will be replaced with word
+or phrase for looking up in dictionaries.
+Second Ex command in example above executes script ~/.vim/plugin/mydict.vim.
+For more information about user's dictionary scripts see
+|ConsultADictScripts|.
+
+==============================================================================
+5. User's dictionary scripts                   *ConsultADictScripts*
+
+It is possible to use Ex commands which exectute written by users scripts to
+display dictionary entries (see |ConsultADict_cmd|). Script saves word or
+phrase for looking up in dictionaries in b:ConsultADict_words variable for
+this functionality.
+
+    Example of written by user dictionary script (~/.vim/plugin/mydict.vim): >
+        if !exists("b:ConsultADict_words")
+          finish
+        endif
+        execute "r!/usr/bin/sdcv -n " . shellescape(b:ConsultADict_words)
+<
+==============================================================================
+6. Credits                                     *ConsultADictCredits*
+
+Thank all people involved in development of Vim.
+Thank Peter Odding (xolox) for http://stackoverflow.com/a/6271254 
+
