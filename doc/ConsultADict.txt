@@ -1,7 +1,7 @@
 *ConsultADict.txt*                          Plugin for consulting dictionaries
 
                       CONSULT A DICTIONARY     *ConsultADict*
-                            Version 0.801
+                            Version 0.9
 
 1. Intro                                       |ConsultADictIntro|
 2. Installation                                |ConsultADictInstallation|
@@ -23,7 +23,7 @@ funcionality:
     * Search for words or phrases in dictionaries and displaying
       dictionary entries in a separate window
     * Use of Ex commands and hence shell-commands (for example
-      "r!/usr/bin/sdcv -n $$$_words) for displaying dictionary entries. For
+      "r!/usr/bin/sdcv -n $$$_words") for displaying dictionary entries. For
       more information see |ConsultADict_cmd| and |ConsultADictScripts|
     * Search in dictionaries for:
         - given word or phrase (|:ConsultADict| <words>);

@@ -2,7 +2,7 @@
 " ConsultADict.vim
 "
 " ============================================================================
-" Last Change:  2014 Mar 10
+" Last Change:  2014 Mar 15
 "
 " Author:       Dmitry Ivanov <Dmitry.Bob.Ivanov at gmail dot com>
 "
@@ -62,7 +62,7 @@ let g:loaded_ConsultADict = 1
 
 " Version:
 " ============================================================================
-    let s:version = "0.801"
+    let s:version = "0.9"
 " ============================================================================
 
 " b:header_len - numter of lines of the header of current plugin buffer
@@ -70,9 +70,13 @@ let g:loaded_ConsultADict = 1
 " s:history_title - title of the search history buffer
 " s:entry_help - determines if Quick Help is shown in the dictionary entry buffer. Nonzero for Quick Help.
 " s:history_help - as s:entry_help for search history buffer 
+" s:entry_buf_num - number of the dictionary entry buffer
+" s:history_buf_num - number of the search history buffer
 
 let s:main_title = "[ConsultADict]"
 let s:history_title = s:main_title . "-[History]"
+let s:entry_buf_num = -1
+let s:history_buf_num = -1
 
 let s:entry_help = 0
 let s:history_help = 0
@@ -170,18 +174,28 @@ function! s:ToggleEntryHelp()
     setlocal nomodifiable
 endfunction
 
+function! s:GetPluginWindowNum()
+    let l:win_num = bufwinnr(s:entry_buf_num)
+    if l:win_num == -1
+        let l:win_num = bufwinnr(s:history_buf_num)
+    endif
+    return l:win_num
+endfunction
+    
+
 " It creates (if not exists) plugin window, and move cursor to it.
 " Then it switchs to (or create) search history buffer, reset parameters of
 " that one. Also it sets 'modifiable' on for editing search history in
 " s:ShowDictEntry 
 function! s:ShowPluginWindow()
-    let l:win_num = bufwinnr(s:main_title)
+    let l:win_num = s:GetPluginWindowNum()
     if l:win_num == -1
         execute "to split"
     else
         execute l:win_num . "wincmd w"
     endif
-    silent execute "buffer! " . bufnr(s:history_title, 1)
+    let s:history_buf_num = bufnr(s:history_title, 1)
+    silent execute "buffer! " . s:history_buf_num
     setlocal modifiable
     setlocal hidden
     setlocal noswapfile
@@ -220,6 +234,7 @@ function! s:ShowDictEntry(source, words)
     if !(exists("g:ConsultADict_cmd") && len(g:ConsultADict_cmd))
         setlocal nomodifiable
         silent execute "edit " . s:main_title
+        let s:entry_buf_num = bufnr("%")
         silent 1,$d
         call append(line('$'), "List of commands to show dictionary entries requires configuration.")
         call append(line('$'), "See :help ConsultADict_cmd")
@@ -232,6 +247,7 @@ function! s:ShowDictEntry(source, words)
             call append(b:header_len, l:words)
             setlocal nomodifiable
             silent execute "edit " . s:main_title
+            let s:entry_buf_num = bufnr("%")
             silent 1,$d
             let b:ConsultADict_words = l:words
             let l:words = shellescape(l:words)
@@ -241,6 +257,7 @@ function! s:ShowDictEntry(source, words)
         else
             setlocal nomodifiable
             silent execute "edit " . s:main_title
+            let s:entry_buf_num = bufnr("%")
             silent 1,$d
             call append(0, "There are no words to consult a dictionary")
         endif
@@ -285,7 +302,7 @@ endfunction
 " a:source determine source of word (phrase) to look it up in dictionaries
 " (see s:ShowDictEntry).
 function! s:TogglePluginWindow(source)
-    let l:win_num = bufwinnr(s:main_title)
+    let l:win_num = s:GetPluginWindowNum()
     if l:win_num == -1
         call s:ShowDictEntry(a:source, "")
     else
@@ -295,7 +312,7 @@ function! s:TogglePluginWindow(source)
 endfunction
 
 function! s:ClosePluginWindow()
-    let l:win_num = bufwinnr(s:main_title)
+    let l:win_num = s:GetPluginWindowNum()
     if l:win_num != -1
         execute l:win_num . "wincmd w"
         close
